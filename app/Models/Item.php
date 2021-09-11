@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use \Illuminate\Database\Eloquent\Relations\HasMany;
 use \Illuminate\Database\Eloquent\Relations\BelongsTo;
-use \Illuminate\Database\QueryBuilder;
+use \Illuminate\Database\Eloquent\Builder;
 
 class Item extends Model
 {
@@ -42,12 +42,12 @@ class Item extends Model
     }
 
     /**
-     * Scope for active items
+     * Scope to filter active items
      *
-     * @param \Illuminate\Database\QueryBuilder $query
-     * @return \Illuminate\Database\QueryBuilder
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeIsActive(QueryBuilder $query): QueryBuilder
+    public function scopeIsActive(Builder $query): Builder
     {
         return $query->where('closing_date', '>', now());
     }
