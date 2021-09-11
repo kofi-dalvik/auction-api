@@ -26,6 +26,7 @@ class ListItemAction
         $keyword = Arr::get($params, 'keyword', null);
 
         $query = Item::with('images')
+                    ->isActive()
                     ->when($sort_by_price, fn ($query) => $query->orderBy('price', $sort_price))
                     ->when($keyword, fn () => $this->keywordSearch($query, $keyword, ['name', 'description']))
                     ->latest('created_at');
