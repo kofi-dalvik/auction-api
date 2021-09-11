@@ -14,7 +14,7 @@ class AddLatestBidIdToItemsTable extends Migration
     public function up()
     {
         Schema::table('items', function (Blueprint $table) {
-            $table->foreignId('latest_bid_id')->after('active')->nullable();
+            $table->foreignId('latest_bid_id')->after('closing_date')->nullable();
 
             $table->foreign('latest_bid_id')
                 ->references('id')
