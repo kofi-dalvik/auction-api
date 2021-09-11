@@ -3,7 +3,10 @@
 namespace App\Actions;
 
 use Exception;
+use App\Models\User;
+use App\Models\Item;
 use App\Models\Bidding;
+use App\Models\AutoBidConfig;
 use App\Models\AutoBidActivation;
 
 class MakeBidAction
@@ -16,15 +19,11 @@ class MakeBidAction
      */
     public function execute(array $data): Bidding
     {
-        $latest_bidding = Bidding::where('item_id', $data['item_id'])
-                            ->latest('created_at')
-                            ->first();
+        $settings = User::find($data['user_id'])->autoBidConfig;
 
-        if ($latest_bidding->user_id == $data['user_id']) {
-            throw new Exception('You are currently the highest bidder');
-        }
+        $this->enforceConstraints($data, $settings);
 
-        $bidding = $this->createBidding($data);
+        $bidding = $this->createBidding($data, $settings);
 
         $this->toggleAutoBidding($bidding, (int) $data['auto_bidding']);
 
@@ -32,12 +31,46 @@ class MakeBidAction
     }
 
     /**
+     * Enforces constraints on biddings
+     *
+     * @param array $data
+     * @param mixed $settings
+     * @return void
+     */
+    private function enforceConstraints(array $data, $settings): void
+    {
+        if ($settings && $settings->max_bid_amount < 1) {
+            throw new Exception('Not enough funds for auto bidding');
+        }
+
+        $latest_bidding = Bidding::where('item_id', $data['item_id'])->latest('created_at')->first();
+
+        if ($latest_bidding) {
+            if ($latest_bidding->user_id == $data['user_id']) {
+                throw new Exception('You are currently the highest bidder');
+            }
+
+            if ($latest_bidding->amount >= $data['amount']) {
+                $amount = $latest_bidding->amount;
+                throw new Exception('You can only bid more than the current bid amount $' . $amount);
+            }
+        } else {
+            $item = Item::find($data['item_id']);
+
+            if ($item->price >= $data['amount']) {
+                throw new Exception('You can only bid more than the item price $' . $item->price);
+            }
+        }
+    }
+
+    /**
      * Creates bid
      *
      * @param array $data
+     * @param mixed $settings
      * @return \App\Models\Bidding
      */
-    private function createBidding(array $data): Bidding
+    private function createBidding(array $data, $settings): Bidding
     {
         $bidding = Bidding::create([
             'user_id' => $data['user_id'],
@@ -45,7 +78,12 @@ class MakeBidAction
             'amount' => $data['amount'],
         ]);
 
-        $bidding->item()->update(['last_bid_id' => $bidding->id]);
+        $bidding->item()->update(['latest_bid_id' => $bidding->id]);
+
+        if ($settings) {
+            $settings->max_bid_amount -= 1;
+            $settings->save();
+        }
 
         return $bidding;
     }
