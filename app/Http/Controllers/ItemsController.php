@@ -7,10 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Actions\ListItemAction;
 use App\Actions\ShowItemAction;
-use App\Actions\MakeBidAction;
 use Illuminate\Http\JsonResponse;
-use App\Events\BidCreated;
-use App\Http\Requests\MakeBidRequest;
 
 class ItemsController extends Controller
 {
@@ -44,23 +41,5 @@ class ItemsController extends Controller
         } catch (Exception $ex) {
             return response()->json(['message' => $ex->getMessage()], Response::HTTP_NOT_FOUND);
         }
-    }
-
-    /**
-     * Make bid
-     *
-     * @param \App\Http\Requests\MakeBidRequest $request
-     * @param \App\Actions\MakeBidAction $action
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function makeBid(MakeBidRequest $request, MakeBidAction $action): JsonResponse
-    {
-        $data = $request->validated();
-        $data['user_id'] = auth()->user()->id;
-        $bidding = $action->execute($data);
-
-        BidCreated::dispatch($bidding);
-
-        return response()->json($bidding, Response::HTTP_OK);
     }
 }
