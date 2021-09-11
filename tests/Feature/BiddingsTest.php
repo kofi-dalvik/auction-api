@@ -6,9 +6,11 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Response;
 use Tests\TestCase;
+use Illuminate\Support\Facades\Event;
 
 use App\Models\Item;
 use App\Models\User;
+use App\Events\BidCreated;
 use App\Models\AutoBidActivation;
 
 class BiddingsTest extends TestCase
@@ -89,5 +91,17 @@ class BiddingsTest extends TestCase
             ->where('item_id', $this->item->id)
             ->exists()
         );
+    }
+
+    public function testShouldDispatchBidCreatedEvent()
+    {
+        Event::fake();
+
+        $payload = $this->getBidPayload();
+
+        $response = $this->storeBidding($payload)
+                        ->assertStatus(Response::HTTP_CREATED);
+
+        Event::assertDispatched(BidCreated::class);
     }
 }
