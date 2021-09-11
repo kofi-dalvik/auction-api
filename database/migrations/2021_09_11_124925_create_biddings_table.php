@@ -18,7 +18,7 @@ class CreateBiddingsTable extends Migration
             $table->foreignId('user_id');
             $table->foreignId('item_id');
             $table->double('amount');
-            $table->boolean('is_auto_bid');
+            $table->boolean('is_auto_bid')->default(false);
             $table->timestamps();
 
             $table->foreign('user_id')
