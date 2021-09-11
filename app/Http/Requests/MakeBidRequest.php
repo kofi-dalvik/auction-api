@@ -29,7 +29,8 @@ class MakeBidRequest extends FormRequest
                 'required',
                 Rule::exists('items', 'id')->where(fn ($query) => $query->where('closing_date', '>', now()))
             ],
-            'amount' => 'required|numeric'
+            'amount' => 'required|numeric',
+            'auto_bidding' => 'required|in:0,1'
         ];
     }
 }
