@@ -11,11 +11,18 @@ use Tests\TestCase;
 
 class ItemsTest extends TestCase
 {
+    protected $actor;
+
+    public function  setUp(): void
+    {
+        parent::setUp();
+
+        $this->actor = User::find(1);
+    }
+
     public function testShouldListPaginatedItems()
     {
-        $user = User::find(1);
-
-        $response = $this->actingAs($user)->getJson('/api/items')
+        $response = $this->actingAs($this->actor)->getJson('/api/items')
             ->assertStatus(Response::HTTP_OK)
             ->assertJson(['current_page' => 1, 'per_page' => 10]);
 
@@ -24,17 +31,34 @@ class ItemsTest extends TestCase
 
     public function testShouldSearchItemsByKeyword()
     {
-        $user = User::find(1);
-
         $item = Item::factory()->create([
             'name'=> 'This is a sampleitem',
             'description' => 'sample item'
         ]);
 
-        $response = $this->actingAs($user)
+        $response = $this->actingAs($this->actor)
             ->getJson('/api/items', ['keyword' => 'sampleitem'])
             ->assertStatus(Response::HTTP_OK);
 
         $this->assertTrue(isset($response['data']) && is_array($response['data']) && count($response['data']));
+    }
+
+    public function testShouldShowItemById()
+    {
+        $item = Item::factory()->create(['name'=> 'name', 'description' => 'description']);
+
+        $response = $this->actingAs($this->actor)
+            ->getJson("/api/items/{$item->id}")
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson(['id' => $item->id]);
+    }
+
+    public function testShouldReturn_404ResponseForUnknownItem()
+    {
+        $id = 'id';
+
+        $response = $this->actingAs($this->actor)
+            ->getJson("/api/items/$id")
+            ->assertStatus(Response::HTTP_NOT_FOUND);
     }
 }
