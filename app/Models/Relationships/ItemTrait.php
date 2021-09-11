@@ -3,6 +3,7 @@
 namespace App\Models\Relationships;
 
 use App\Models\User;
+use App\Models\Item;
 use \Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 trait ItemTrait
