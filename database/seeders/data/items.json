@@ -1,0 +1,57 @@
+[
+    {
+        "name": "Armrest Ergonomic Office Chair",
+        "description": "Comfortable high-back: This high back office chair provides the entire length of your spine with correct ergonomic positioning as well as a comfortable resting place. Along with the high-back the breathable mesh also provides circulation of fresh air which keeps you relaxed and at ease.",
+        "images": ["chair1.jpg"]
+    },
+    {
+        "name": "BENGOO G9000 Stereo Gaming Headset",
+        "description": "Multi-Platform Compatible Support PlayStation 4, New Xbox One, PC, Nintendo 3DS, Laptop, PSP, Tablet, iPad, Computer, Mobile Phone. Please note you need an extra Microsoft Adapter (Not Included) when connect with an old version Xbox One controller.",
+        "images": ["headset.jpg"]
+    },
+    {
+        "name": "Amazon Basics 8-Sheet Strip-Cut Paper Shredder",
+        "description": "Shreds/cuts paper into 1/4-inch-wide strips at a rate of 9.84 feet per minute; meets security level P-2 standards Shred up to 8 sheets of 20-pound bond paper at a time (no need to remove staples or small paper clips); also destroys CDs, DVDs, and credit cards (one at a time, through dedicated slot; blades cut each disc into 4 pieces)",
+        "images": ["shredder.jpg"]
+    },
+    {
+        "name": "Wireless Earbuds Bluetooth Wireless Headphones",
+        "description": "True Wireless: Bluetooth 5.0 true wireless earbuds compatible with Apple or Android cell phones ensures ultra-fast pairing, receive data and instructions accurately, reduces call and music dropouts; Bluetooth earbuds automatically connects the last-paired device on startup for total distraction-free workout experience.",
+        "images": ["airbuds.jpg"]
+    },
+    {
+        "name": "Acer Predator Helios 300 PH315-54-760S",
+        "description": "Gaming Laptop | Intel i7-11800H | NVIDIA GeForce RTX 3060 Laptop GPU | 15.6\" Full HD 144Hz 3ms IPS Display | 16GB DDR4 | 512GB SSD | Killer WiFi 6 | RGB Keyboard. xtreme Performance: Crush the competition with the impressive power and speed of the 11th Generation Intel Core i7-11800H processor, featuring 8 cores and 16 threads to divide and conquer any task or run your most intensive games",
+        "images": ["acer.jpg", "acer2.jpg"]
+    },
+    {
+        "name": "PRITOM Tablet 7 inch, Android 9.0",
+        "description": "Tablet PC with 2 GB RAM, 32 GB Storage, Quad-Core Processor, IPS HD Display, Wi-Fi,Bluetooth, Dual Camera, Android Tablet with Cover Case (Black1). Pritom P7pro Tablets】 Equipped with the Android 9.0 OS, 2 GB RAM, 32 GB ROM, The powerful and energy-saving 64 bits Quad-core Processor up to 1.5GHz, your Pritom P7pro tablet enables quick app launches, smooth videos and great overall performance. Easily browsing online and download whatever you want, such as Youtube, Netflix, Instagram and any other games",
+        "images": ["tablet.jpg", "tablet2.jpg"]
+    },
+    {
+        "name": "Amazon Basics Microwave, Small, 0.7 Cu. Ft, 700W, Works with Alexa",
+        "description": "Now it’s easier to defrost vegetables, make popcorn, cook potatoes, and reheat rice. With an Echo device (not included), quick-cook voice presets and a simplified keypad let you just ask Alexa to start microwaving. Compact size saves counter space, plus 10 power levels, a kitchen timer, a child lock, and a turntable. Alexa is always getting smarter and adding new presets.",
+        "images": ["microwave.jpg", "microwave2.jpg"]
+    },
+    {
+        "name": "ThermoPro TP25 500ft Wireless Bluetooth Meat Thermometer",
+        "description": "Extended 500ft bluetooth range: Rechargeable bluetooth thermometer adopts the most advanced bluetooth 5.0 technology that provides the strongest, reliable connection, allowing you to monitor the progress of your cook up to 500ft away if you move out of range of the device, you’ll see receive a phone notification to inform you to move back in range",
+        "images": ["thermo.jpg"]
+    },
+    {
+        "name": "NETGEAR Nighthawk Smart Wi-Fi Router (R7000)",
+        "description": "Smart parental controls: Pause device internet access, view site history usage, and filter websites for free. Set online time limits, schedule device internet access, and more for $4.99/month (1st month free trial)",
+        "images": ["router.jpg"]
+    },
+    {
+        "name": "Lepro 65.6ft LED Strip Lights",
+        "description": "65.6ft Super-long Strip: 2 X 32.8ft strip lights, long enough to light and decorate your whole room. Perfect for living rooms, bedrooms, dining rooms, kitchens, desks, cabinets, and your Christmas tree. Especially suitable for holiday parties like Christmas, Halloween, and more.",
+        "images": ["light.jpg", "light2.jpg"]
+    },
+    {
+        "name": "Sense Energy Monitor",
+        "description": "SEE WHAT’S UP. KNOW WHAT’S ON: Track how much electricity you’re using, what time your kids got home, or when someone leaves the basement light on. Sense identifies patterns in your energy use to help your family be more efficient, informed, and secure.",
+        "images": ["energy_mon.jpg", "energy_mon2.jpg"]
+    }
+]
