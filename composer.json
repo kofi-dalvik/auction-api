@@ -45,6 +45,13 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+
+        "unit-testing": [
+            "@php artisan test --testsuite=Unit --stop-on-failure"
+        ],
+        "feature-testing": [
+            "@php artisan test --testsuite=Feature --stop-on-failure"
         ]
     },
     "extra": {
