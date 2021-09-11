@@ -12,6 +12,16 @@ class Item extends Model
     use HasFactory;
 
     /**
+     * Item has many biddings
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function biddings(): HasMany
+    {
+        return $this->hasMany(Bidding::class, 'item_id');
+    }
+
+    /**
      * Item has many images
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
