@@ -19,7 +19,7 @@ class CreateItemsTable extends Migration
             $table->double('price');
             $table->text('description');
             $table->dateTime('closing_date');
-            $table->boolean('active');
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }
