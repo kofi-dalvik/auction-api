@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Events\BidCreated;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -18,7 +19,7 @@ class BiddingsController extends Controller
      * @param \App\Actions\MakeBidAction $action
      * @return \Illuminate\Http\JsonResponse
      */
-    public function makeBid(MakeBidRequest $request, MakeBidAction $action): JsonResponse
+    public function store(MakeBidRequest $request, MakeBidAction $action): JsonResponse
     {
         try {
             $data = $request->validated();
@@ -28,8 +29,9 @@ class BiddingsController extends Controller
 
             BidCreated::dispatch($bidding);
 
-            return response()->json($bidding, Response::HTTP_OK);
+            return response()->json($bidding, Response::HTTP_CREATED);
         } catch (Exception $ex) {
+            // logger($ex);
             return response()->json([
                 'message' => $ex->getMessage()
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
