@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Http\JsonResponse;
 use App\Actions\ListItemAction;
+use App\Actions\ShowItemAction;
+use Illuminate\Http\JsonResponse;
 
 class ItemsController extends Controller
 {
@@ -34,7 +35,7 @@ class ItemsController extends Controller
     public function show($id, ShowItemAction $action): JsonResponse
     {
         try {
-            $item = $action->execute($id);
+            $item = $action->execute((int) $id);
 
             return response()->json($item, Response::HTTP_OK);
         } catch (Exception $ex) {
