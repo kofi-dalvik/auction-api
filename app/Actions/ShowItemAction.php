@@ -11,10 +11,10 @@ class ShowItemAction
     /**
      * Get given item details
      *
-     * @param mixed $id
+     * @param int $id
      * @return \App\Models\Item
      */
-    public function execute(mixed $id): Item
+    public function execute(int $id): Item
     {
         $item = Item::with('images')->find($id);
 
