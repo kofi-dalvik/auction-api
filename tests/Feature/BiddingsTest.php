@@ -12,6 +12,7 @@ use App\Models\Item;
 use App\Models\User;
 use App\Events\BidCreated;
 use App\Models\AutoBidActivation;
+use App\Listeners\ProcessAutoBidding;
 
 class BiddingsTest extends TestCase
 {
@@ -37,16 +38,18 @@ class BiddingsTest extends TestCase
         ];
     }
 
-    private function storeBidding($payload)
+    private function storeBidding($payload = null)
     {
+        if (!$payload) {
+            $payload = $this->getBidPayload();
+        }
+
         return $this->actingAs($this->actor)->postJson('/api/biddings', $payload);
     }
 
     public function testShouldMakeBidsWhenValidDataIsProvided()
     {
-        $payload = $this->getBidPayload();
-
-        $response = $this->storeBidding($payload)
+        $response = $this->storeBidding()
                         ->assertStatus(Response::HTTP_CREATED)
                         ->assertJson([
                             'item_id' => $this->item->id,
@@ -72,9 +75,7 @@ class BiddingsTest extends TestCase
             'amount' => $this->item->price + 1
         ]);
 
-        $payload = $this->getBidPayload();
-
-        $response = $this->storeBidding($payload)
+        $response = $this->storeBidding()
                         ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
@@ -97,11 +98,22 @@ class BiddingsTest extends TestCase
     {
         Event::fake();
 
-        $payload = $this->getBidPayload();
-
-        $response = $this->storeBidding($payload)
+        $response = $this->storeBidding()
                         ->assertStatus(Response::HTTP_CREATED);
 
-        Event::assertDispatched(BidCreated::class);
+        Event::assertDispatched(fn (BidCreated $e) => $response['id'] === $e->bidding->id);
+    }
+
+    public function testShouldProcessAutobidsBotsWhenNewBidIsCreated()
+    {
+        Event::fake();
+
+        $response = $this->storeBidding()
+                        ->assertStatus(Response::HTTP_CREATED);
+
+        Event::assertListening(
+            BidCreated::class,
+            ProcessAutoBidding::class
+        );
     }
 }
