@@ -4,7 +4,6 @@ namespace App\Actions;
 
 use Exception;
 use App\Models\Item;
-use Illuminate\Pagination\Paginator;
 
 class ShowItemAction
 {
