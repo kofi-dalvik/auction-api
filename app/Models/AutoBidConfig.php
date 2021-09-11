@@ -7,5 +7,5 @@ use App\Models\Relationships\UserTrait;
 
 class AutoBidConfig extends Model
 {
-    use HasFactory;
+    use HasFactory, UserTrait;
 }
