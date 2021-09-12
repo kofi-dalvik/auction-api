@@ -22,7 +22,7 @@ class LoginController extends Controller
 
         return response()->json([
             'user' => $user,
-            'access_token' => $user->createToken('Auction')->plainTextToken,
+            'token' => $user->createToken('Auction')->plainTextToken,
         ], Response::HTTP_OK);
     }
 
