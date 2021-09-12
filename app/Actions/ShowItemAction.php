@@ -15,7 +15,7 @@ class ShowItemAction
      */
     public function execute(int $id): Item
     {
-        $item = Item::with('images')->find($id);
+        $item = Item::with('images', 'latestBid.user')->find($id);
 
         if (!$item) throw new Exception('Item not found');
 

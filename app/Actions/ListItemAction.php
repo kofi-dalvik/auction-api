@@ -25,7 +25,7 @@ class ListItemAction
         $sort_by_price = in_array($sort_price, $this->sort_directions);
         $keyword = Arr::get($params, 'keyword', null);
 
-        $query = Item::with('images')
+        $query = Item::with('images', 'latestBid.user')
                     ->isActive()
                     ->when($sort_by_price, fn ($query) => $query->orderBy('price', $sort_price))
                     ->when($keyword, fn () => $this->keywordSearch($query, $keyword, ['name', 'description']))
