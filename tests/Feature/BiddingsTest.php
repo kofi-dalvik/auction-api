@@ -16,6 +16,8 @@ use App\Listeners\ProcessAutoBidding;
 
 class BiddingsTest extends TestCase
 {
+    use RefreshDatabase;
+
     protected $actor;
 
     protected $item;
@@ -24,7 +26,7 @@ class BiddingsTest extends TestCase
     {
         parent::setUp();
 
-        $this->actor = User::find(1);
+        $this->actor = User::factory()->create();
 
         $this->item = Item::factory()->create(['name'=> 'test', 'description' => 'test item']);
     }

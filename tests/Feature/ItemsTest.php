@@ -11,13 +11,15 @@ use Tests\TestCase;
 
 class ItemsTest extends TestCase
 {
+    use RefreshDatabase;
+
     protected $actor;
 
     public function  setUp(): void
     {
         parent::setUp();
 
-        $this->actor = User::find(1);
+        $this->actor = User::factory()->create();
     }
 
     public function testShouldListPaginatedItems()

@@ -20,11 +20,9 @@ class MakeBidAction
      */
     public function execute(array $data): Bidding
     {
-        $settings = User::find($data['user_id'])->autoBidConfig;
+        $this->enforceConstraints($data);
 
-        $this->enforceConstraints($data, $settings);
-
-        $bidding = $this->createBidding($data, $settings);
+        $bidding = $this->createBidding($data);
 
         return $bidding;
     }
@@ -33,18 +31,13 @@ class MakeBidAction
      * Enforces constraints on biddings
      *
      * @param array $data
-     * @param mixed $settings
      * @return void
      */
-    private function enforceConstraints(array $data, $settings): void
+    private function enforceConstraints(array $data): void
     {
         $item = Item::isActive()->find($data['item_id']);
 
         if (!$item) throw new Exception('Bidding has ended');
-
-        if ($settings && $settings->max_bid_amount < 1) {
-            throw new Exception('Not enough funds for auto bidding');
-        }
 
         $latest_bidding = Bidding::where('item_id', $data['item_id'])->orderBy('amount', 'desc')->first();
 
@@ -68,10 +61,9 @@ class MakeBidAction
      * Creates bid
      *
      * @param array $data
-     * @param mixed $settings
      * @return \App\Models\Bidding
      */
-    private function createBidding(array $data, $settings): Bidding
+    private function createBidding(array $data): Bidding
     {
         DB::beginTransaction();
 
@@ -83,12 +75,6 @@ class MakeBidAction
             ]);
 
             $bidding->item()->update(['latest_bid_id' => $bidding->id]);
-
-            if ($settings) {
-                $settings->max_bid_amount -= 1;
-                $settings->save();
-            }
-
             DB::commit();
 
             return $bidding;
