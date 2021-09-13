@@ -6,6 +6,7 @@ use Exception;
 use App\Events\BidCreated;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Models\AutoBidConfig;
 use App\Actions\MakeBidAction;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\MakeBidRequest;
@@ -36,5 +37,37 @@ class BiddingsController extends Controller
                 'message' => $ex->getMessage()
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
+    }
+
+    /**
+     * Save auto bidding configs
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function saveConfigs(Request $request): JsonResponse
+    {
+        $amount = (float) $request->max_bid_amount;
+
+        if (!$amount) {
+            return response()->json([
+                'message' => 'The Maximum auto bidding parameter must be a valid amount'
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $config = auth()->user()->autoBidConfig;
+
+        if (!$config) $config = new AutoBidConfig;
+
+        $config->user_id = auth()->user()->id;
+        $config->max_bid_amount = $amount;
+        $config->save();
+
+        $user = auth()->user()->load('autoBidConfig');
+
+        return response()->json([
+            'message' => 'The Maximum auto bidding parameter has been set',
+            'user' => $user
+        ], Response::HTTP_OK);
     }
 }

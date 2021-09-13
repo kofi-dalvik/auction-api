@@ -20,6 +20,8 @@ class LoginController extends Controller
     {
         $user = User::where('username', $request->username)->first();
 
+        $user->load('autoBidConfig');
+
         return response()->json([
             'user' => $user,
             'token' => $user->createToken('Auction')->plainTextToken,

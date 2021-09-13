@@ -17,10 +17,12 @@ use App\Http\Controllers\BiddingsController;
 |
 */
 Route::post('/login', [LoginController::class, 'login']);
-Route::post('/logout', [LoginController::class, 'logout']);
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [LoginController::class, 'logout']);
+
     Route::get('/items', [ItemsController::class, 'index']);
     Route::get('/items/{id}', [ItemsController::class, 'show']);
     Route::post('/biddings', [BiddingsController::class, 'store']);
+    Route::post('/biddings/configs', [BiddingsController::class, 'saveConfigs']);
 });
