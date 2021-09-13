@@ -28,7 +28,7 @@ class ListItemAction
         $query = Item::with('images', 'latestBid.user')
                     ->isActive()
                     ->when($sort_by_price, fn ($query) => $query->orderBy('price', $sort_price))
-                    ->when($keyword, fn () => $this->keywordSearch($query, $keyword, ['name', 'description']))
+                    ->when($keyword, fn ($query) => $this->keywordSearch($query, $keyword, ['name', 'description']))
                     ->latest('created_at');
 
         return $query->paginate(10);
