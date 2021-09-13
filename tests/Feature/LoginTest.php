@@ -14,7 +14,7 @@ class LoginTest extends TestCase
 
     public function testShouldLogUserInWhenValidCredentialsAreProvided()
     {
-        $username = 'user1';
+        $username = 'username';
         $user = User::factory(['username' => $username])->create();
 
         $data = ['username' => $username];
