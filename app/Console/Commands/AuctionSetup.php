@@ -42,7 +42,7 @@ class AuctionSetup extends Command
      */
     public function handle()
     {
-        file_put_contents(database_path('database.sqlite'), null);
+        // file_put_contents(database_path('database.sqlite'), null);
         $this->call('migrate:refresh');
         $this->call('db:seed');
         $this->unzip();
