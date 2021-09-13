@@ -2,19 +2,19 @@
 
 namespace App\Queries;
 
-use \Illuminate\Database\QueryBuilder;
+use \Illuminate\Database\Eloquent\Builder;
 
 trait KeywordSearchTrait
 {
     /**
      * Builds search functionality to query
      *
-     * @param \Illuminate\Database\QueryBuilder $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
      * @param string $keyword
      * @param array $fields
-     * @return \Illuminate\Database\QueryBuilder
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function keywordSearch(QueryBuilder $query, string $keyword, array $fields = []): QueryBuilder
+    public function keywordSearch(Builder $query, string $keyword, array $fields = []): Builder
     {
         if (!count($fields)) return $query;
 
