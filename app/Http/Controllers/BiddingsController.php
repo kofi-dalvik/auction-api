@@ -32,6 +32,8 @@ class BiddingsController extends Controller
 
             BidCreated::dispatch($bidding);
 
+            $bidding->load('user');
+
             return response()->json($bidding, Response::HTTP_CREATED);
         } catch (Exception $ex) {
             logger($ex);
@@ -51,9 +53,9 @@ class BiddingsController extends Controller
     {
         $amount = (float) $request->max_bid_amount;
 
-        if (!$amount) {
+        if (!$amount || $amount < 1) {
             return response()->json([
-                'message' => 'The Maximum auto bidding parameter must be a valid amount'
+                'message' => 'The Maximum auto bidding parameter must be $1 or more'
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
