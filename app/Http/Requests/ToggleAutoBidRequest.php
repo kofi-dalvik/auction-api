@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class MakeBidRequest extends FormRequest
+class ToggleAutoBidRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,11 +24,8 @@ class MakeBidRequest extends FormRequest
     public function rules()
     {
         return [
-            'item_id' => [
-                'required',
-                Rule::exists('items', 'id')->where(fn ($query) => $query->where('closing_date', '>', now()))
-            ],
-            'amount' => 'required|numeric'
+            'item_id' => 'required|exists:items,id',
+            'auto_bidding' => 'required|in:0,1'
         ];
     }
 }

@@ -10,6 +10,8 @@ use App\Models\AutoBidConfig;
 use App\Actions\MakeBidAction;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\MakeBidRequest;
+use App\Actions\ToggleAutoBidAction;
+use App\Http\Requests\ToggleAutoBidRequest;
 
 class BiddingsController extends Controller
 {
@@ -69,5 +71,23 @@ class BiddingsController extends Controller
             'message' => 'The Maximum auto bidding parameter has been set',
             'user' => $user
         ], Response::HTTP_OK);
+    }
+
+    /**
+     * Toogle auto bid
+     *
+     * @param \App\Http\Requests\ToggleAutoBidRequest $request
+     * @param \App\Actions\ToggleAutoBidAction $action
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function toggleAutoBidding(ToggleAutoBidRequest $request, ToggleAutoBidAction $action): JsonResponse
+    {
+        $action->execute([
+            'user_id' => auth()->user()->id,
+            'item_id' => $request->item_id,
+            'auto_bidding' => $request->auto_bidding
+        ]);
+
+        return response()->json(['message' => 'Saved'], Response::HTTP_OK);
     }
 }

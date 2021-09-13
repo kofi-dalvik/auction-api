@@ -23,6 +23,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/items', [ItemsController::class, 'index']);
     Route::get('/items/{id}', [ItemsController::class, 'show']);
+
     Route::post('/biddings', [BiddingsController::class, 'store']);
     Route::post('/biddings/configs', [BiddingsController::class, 'saveConfigs']);
+    Route::post('/biddings/auto_bid', [BiddingsController::class, 'toggleAutoBidding']);
 });
