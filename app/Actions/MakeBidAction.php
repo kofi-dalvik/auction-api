@@ -25,8 +25,6 @@ class MakeBidAction
 
         $bidding = $this->createBidding($data, $settings);
 
-        $this->toggleAutoBidding($bidding, (int) $data['auto_bidding']);
-
         return $bidding;
     }
 
@@ -86,28 +84,5 @@ class MakeBidAction
         }
 
         return $bidding;
-    }
-
-    /**
-     * Toggle autobid activation
-     *
-     * @param \App\Models\Bidding $bidding
-     * @param int $toggler
-     * @return void
-     */
-    private function toggleAutoBidding(Bidding $bidding, int $toggler): void
-    {
-        $activation = AutoBidActivation::where('user_id', $bidding->user_id)
-                        ->where('item_id', $bidding->item_id)
-                        ->first();
-
-        if ($toggler === 0 && $activation) {
-            $activation->delete();
-        } elseif ($toggler === 1 && !$activation) {
-            AutoBidActivation::create([
-                'user_id' => $bidding->user_id,
-                'item_id' => $bidding->item_id
-            ]);
-        }
     }
 }

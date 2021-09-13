@@ -34,7 +34,7 @@ class BiddingsController extends Controller
 
             return response()->json($bidding, Response::HTTP_CREATED);
         } catch (Exception $ex) {
-            // logger($ex);
+            logger($ex);
             return response()->json([
                 'message' => $ex->getMessage()
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
