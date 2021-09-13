@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use ZipArchive;
 use Illuminate\Console\Command;
 
 class AuctionSetup extends Command
@@ -44,6 +45,19 @@ class AuctionSetup extends Command
         file_put_contents(database_path('database.sqlite'), null);
         $this->call('migrate:refresh');
         $this->call('db:seed');
+        $this->unzip();
         return 0;
+    }
+
+    private function unzip()
+    {
+        $archive = public_path('archives/items.zip');
+
+        if (!file_exists($archive)) return;
+
+        $zip = new ZipArchive();
+        $zip->open($archive, ZipArchive::CREATE);
+        $zip->extractTo(public_path('/images'));
+        $zip->close();
     }
 }
