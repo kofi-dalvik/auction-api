@@ -34,7 +34,6 @@ class BiddingsTest extends TestCase
         return [
             'item_id' => $this->item->id,
             'amount' => $this->item->price + 1,
-            'auto_bidding' => 0
         ];
     }
 
@@ -84,8 +83,9 @@ class BiddingsTest extends TestCase
         $payload = $this->getBidPayload();
         $payload['auto_bidding'] = 1;
 
-        $response = $this->storeBidding($payload)
-                        ->assertStatus(Response::HTTP_CREATED);
+        $response = $this->actingAs($this->actor)
+                        ->postJson('/api/biddings/auto_bid', $payload)
+                        ->assertStatus(Response::HTTP_OK);
 
         $this->assertTrue(
             AutoBidActivation::where('user_id', $this->actor->id)

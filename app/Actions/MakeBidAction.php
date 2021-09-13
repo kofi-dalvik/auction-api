@@ -2,6 +2,7 @@
 
 namespace App\Actions;
 
+use DB;
 use Exception;
 use App\Models\User;
 use App\Models\Item;
@@ -25,8 +26,6 @@ class MakeBidAction
 
         $bidding = $this->createBidding($data, $settings);
 
-        $this->toggleAutoBidding($bidding, (int) $data['auto_bidding']);
-
         return $bidding;
     }
 
@@ -39,11 +38,15 @@ class MakeBidAction
      */
     private function enforceConstraints(array $data, $settings): void
     {
+        $item = Item::isActive()->find($data['item_id']);
+
+        if (!$item) throw new Exception('Bidding has ended');
+
         if ($settings && $settings->max_bid_amount < 1) {
             throw new Exception('Not enough funds for auto bidding');
         }
 
-        $latest_bidding = Bidding::where('item_id', $data['item_id'])->latest('created_at')->first();
+        $latest_bidding = Bidding::where('item_id', $data['item_id'])->orderBy('amount', 'desc')->first();
 
         if ($latest_bidding) {
             if ($latest_bidding->user_id == $data['user_id']) {
@@ -55,8 +58,6 @@ class MakeBidAction
                 throw new Exception('You can only bid more than the current bid amount $' . $amount);
             }
         } else {
-            $item = Item::find($data['item_id']);
-
             if ($item->price >= $data['amount']) {
                 throw new Exception('You can only bid more than the item price $' . $item->price);
             }
@@ -72,42 +73,29 @@ class MakeBidAction
      */
     private function createBidding(array $data, $settings): Bidding
     {
-        $bidding = Bidding::create([
-            'user_id' => $data['user_id'],
-            'item_id' => $data['item_id'],
-            'amount' => $data['amount'],
-        ]);
+        DB::beginTransaction();
 
-        $bidding->item()->update(['latest_bid_id' => $bidding->id]);
-
-        if ($settings) {
-            $settings->max_bid_amount -= 1;
-            $settings->save();
-        }
-
-        return $bidding;
-    }
-
-    /**
-     * Toggle autobid activation
-     *
-     * @param \App\Models\Bidding $bidding
-     * @param int $toggler
-     * @return void
-     */
-    private function toggleAutoBidding(Bidding $bidding, int $toggler): void
-    {
-        $activation = AutoBidActivation::where('user_id', $bidding->user_id)
-                        ->where('item_id', $bidding->item_id)
-                        ->first();
-
-        if ($toggler === 0 && $activation) {
-            $activation->delete();
-        } elseif ($toggler === 1 && !$activation) {
-            AutoBidActivation::create([
-                'user_id' => $bidding->user_id,
-                'item_id' => $bidding->item_id
+        try {
+            $bidding = Bidding::create([
+                'user_id' => $data['user_id'],
+                'item_id' => $data['item_id'],
+                'amount' => $data['amount'],
             ]);
+
+            $bidding->item()->update(['latest_bid_id' => $bidding->id]);
+
+            if ($settings) {
+                $settings->max_bid_amount -= 1;
+                $settings->save();
+            }
+
+            DB::commit();
+
+            return $bidding;
+        } catch (Exception $ex) {
+            DB::rollback();
+
+            throw $ex;
         }
     }
 }

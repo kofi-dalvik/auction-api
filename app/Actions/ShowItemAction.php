@@ -15,7 +15,13 @@ class ShowItemAction
      */
     public function execute(int $id): Item
     {
-        $item = Item::with('images')->find($id);
+        $item = Item::with([
+            'images',
+            'biddings.user',
+            'latestBid.user',
+            'biddings' => fn ($query) => $query->orderBy('amount', 'desc'),
+            'autoBidActivations' => fn ($query) => $query->where('user_id', auth()->user()->id)
+        ])->find($id);
 
         if (!$item) throw new Exception('Item not found');
 

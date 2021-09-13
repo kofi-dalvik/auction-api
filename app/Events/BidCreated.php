@@ -12,7 +12,7 @@ use Illuminate\Queue\SerializesModels;
 
 use App\Models\Bidding;
 
-class BidCreated
+class BidCreated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 

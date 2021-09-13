@@ -27,6 +27,8 @@ class User extends Authenticatable
      */
     protected $hidden = ['password', 'remember_token'];
 
+    protected $appends = ['image_url'];
+
     /**
      * User has one  autobiding configurations
      *
@@ -35,5 +37,16 @@ class User extends Authenticatable
     public function autoBidConfig(): HasOne
     {
         return $this->hasOne(AutoBidConfig::class, 'user_id');
+    }
+
+    public function getImageUrlAttribute()
+    {
+        if (in_array($this->id, [1, 2])) {
+            $path = "images/user-{$this->id}.jpg";
+        } else {
+            $path = "images/user.jpg";
+        }
+
+        return asset($path);
     }
 }

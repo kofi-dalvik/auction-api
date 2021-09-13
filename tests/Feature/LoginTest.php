@@ -16,7 +16,7 @@ class LoginTest extends TestCase
             ->assertStatus(Response::HTTP_OK);
 
         $this->assertTrue(isset($response['user']['username']) && $response['user']['username'] === $data['username']);
-        $this->assertTrue(isset($response['access_token']));
+        $this->assertTrue(isset($response['token']));
     }
 
     public function testLoginShouldFailWhenIncorrectCredentialsAreProvided()
