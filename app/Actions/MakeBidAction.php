@@ -2,6 +2,7 @@
 
 namespace App\Actions;
 
+use DB;
 use Exception;
 use App\Models\User;
 use App\Models\Item;
@@ -37,11 +38,15 @@ class MakeBidAction
      */
     private function enforceConstraints(array $data, $settings): void
     {
+        $item = Item::isActive()->find($data['item_id']);
+
+        if (!$item) throw new Exception('Bidding has ended');
+
         if ($settings && $settings->max_bid_amount < 1) {
             throw new Exception('Not enough funds for auto bidding');
         }
 
-        $latest_bidding = Bidding::where('item_id', $data['item_id'])->latest('created_at')->first();
+        $latest_bidding = Bidding::where('item_id', $data['item_id'])->orderBy('amount', 'desc')->first();
 
         if ($latest_bidding) {
             if ($latest_bidding->user_id == $data['user_id']) {
@@ -53,8 +58,6 @@ class MakeBidAction
                 throw new Exception('You can only bid more than the current bid amount $' . $amount);
             }
         } else {
-            $item = Item::find($data['item_id']);
-
             if ($item->price >= $data['amount']) {
                 throw new Exception('You can only bid more than the item price $' . $item->price);
             }
@@ -70,19 +73,29 @@ class MakeBidAction
      */
     private function createBidding(array $data, $settings): Bidding
     {
-        $bidding = Bidding::create([
-            'user_id' => $data['user_id'],
-            'item_id' => $data['item_id'],
-            'amount' => $data['amount'],
-        ]);
+        DB::beginTransaction();
 
-        $bidding->item()->update(['latest_bid_id' => $bidding->id]);
+        try {
+            $bidding = Bidding::create([
+                'user_id' => $data['user_id'],
+                'item_id' => $data['item_id'],
+                'amount' => $data['amount'],
+            ]);
 
-        if ($settings) {
-            $settings->max_bid_amount -= 1;
-            $settings->save();
+            $bidding->item()->update(['latest_bid_id' => $bidding->id]);
+
+            if ($settings) {
+                $settings->max_bid_amount -= 1;
+                $settings->save();
+            }
+
+            DB::commit();
+
+            return $bidding;
+        } catch (Exception $ex) {
+            DB::rollback();
+
+            throw $ex;
         }
-
-        return $bidding;
     }
 }
